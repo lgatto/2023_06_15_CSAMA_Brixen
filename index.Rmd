@@ -1,7 +1,7 @@
 ---
 title: "Mass spectrometry-based proteomics"
 subtitle: "Statistical Data Analysis for Genome-Scale Biology"
-author: "Laurent Gatto - lgatto.github.io"
+author: "Laurent Gatto - @lgatto@fosstodon.org"
 date: "15 June 2023, Brixen"
 output:
   xaringan::moon_reader:
@@ -35,7 +35,7 @@ xaringanExtra::use_panelset()
 1. Participants survey
 2. The **R for Mass Spectrometry** initiative
 3. Mass spectrometry-based proteomics
-4. MS-based Single-cell proteomics
+4. MS-based single-cell proteomics
 
 ]
 
@@ -133,7 +133,7 @@ These data tables are less similar than they appear.
 ---
 class: middle
 
-### MS workflow
+### Mass spectrometry-based proteomics
 
 ```{r echo=FALSE, out.width='100%', fig.align = 'center'}
 knitr::include_graphics('./figs/workflow.png')
@@ -249,8 +249,14 @@ Data dependent acquisition (DDA):
 ???
 
 Highlight
+- Some peptides might not ionise (well) -> no ions -> **missing data**
+- Low abundanec (too low, below limit of detection) -> **missing data**
 - Semi-stochastic nature of MS -> **missing data**
+- Computational "drop-outs" (see later) -> **missing data**
 - Data dependent acquisition (DDA)
+
+Please keep this MS space and the semi-stochastic nature of MS
+acquisition in mind , as I will come back to it later.
 
 ---
 class: middle, center, inverse
@@ -334,6 +340,9 @@ class: middle, center, inverse
 ```{r echo=FALSE, out.width='95%', fig.align = 'center'}
 knitr::include_graphics('./figs/frag.png')
 ```
+???
+
+- Nitrogen
 
 ---
 ###  Identification: Peptide-spectrum matching (PSM)
@@ -380,11 +389,15 @@ Performed by **search engines** such as Mascot, MSGF+, Andromeda, ...
 ---
 ### Identification: database
 
+
 ![Uniprot human proteome](./figs/uniprot1.png)
+
 
 ???
 
-## [Human proteome](https://www.uniprot.org/help/human_proteome)
+## Where do the peptides come from?
+
+### [Human proteome](https://www.uniprot.org/help/human_proteome)
 
 In 2008, a draft of the complete human proteome was released from
 UniProtKB/Swiss-Prot: the approximately 20,000 putative human
@@ -430,7 +443,7 @@ to be described in separate 'external' entries.
 ---
 class: middle
 
-### Identification
+### Identification: decoy to control false identification
 
 ```{r echo=FALSE, out.width='65%', fig.align = 'center'}
 knitr::include_graphics('./figs/pr-2007-00739d_0004.gif')
@@ -445,6 +458,7 @@ Rates: Two Sides of the Same Coin](https://pubs.acs.org/doi/abs/10.1021/pr700739
 - (global) FDR = B/(A+B)
 - (local) fdr = PEP = b/(a+b)
 
+This is the same as Wolfgang's slide: Basic problem: binary decision
 
 ---
 ###  Identification: Protein inference
@@ -514,8 +528,8 @@ class: middle, center, inverse
 |MS2 |Counting   |iTRAQ, TMT |
 
 
-- Quantitation data at the PSM or peptide level.
-- Data need to be aggregated into protein level data.
+- Quantitation data at the PSM/precursor or peptide level.
+- Data need to be *aggregated* into protein level data.
 
 ???
 
@@ -545,14 +559,20 @@ class: middle
 
 ## QFeatures objects
 
+
+.left-col-75[
+
+
 ```{r, eval = FALSE}
 > library(QFeatures)
 > data(hlpsms)
 > hl <- readQFeatures(hlpsms, ecol = 1:10, name = "psms")
 > An instance of class QFeatures containing 1 assays:
  [1] psms: SummarizedExperiment with 3010 rows and 10 columns
-> hl <- aggregateFeatures(hl, "psms", "Sequence", name = "peptides", fun = colMeans) |>
-       aggregateFeatures("peptides", "ProteinGroupAccessions", name = "proteins", fun = colMeans)
+> hl <- aggregateFeatures(hl, "psms", "Sequence",
+                          name = "peptides", fun = colMeans) |>
+      aggregateFeatures("peptides", "ProteinGroupAccessions",
+                        name = "proteins", fun = colMeans)
 > hl
 An instance of class QFeatures containing 3 assays:
  [1] psms: SummarizedExperiment with 3010 rows and 10 columns
@@ -560,10 +580,14 @@ An instance of class QFeatures containing 3 assays:
  [3] proteins: SummarizedExperiment with 1596 rows and 10 columns
 ```
 
-```{r echo=FALSE, out.width='15%', fig.align = 'right'}
+]
+
+.right-col-25[
+
+```{r echo=FALSE, out.width='80%', fig.align = 'right'}
 knitr::include_graphics('https://raw.githubusercontent.com/rformassspectrometry/stickers/master/QFeatures/QFeatures.png')
 ```
-
+]
 ---
 class: middle
 
@@ -592,6 +616,74 @@ knitr::include_graphics('figs/scp.png')
 ]
 
 ---
+class: middle
+
+- **August 2019**: in a Nature Methods Technology Feature
+  ([10.1038/s41592-019-0540-6](https://www.nature.com/articles/s41592-019-0540-6)),
+  Vivien Marx *dreamt of single-cell proteomics*.
+
+- **March 2023**: Nature Methods published a special issue with a
+  *Focus on single-cell proteomics*
+  ([www.nature.com/collections/bdfhafhdeb](www.nature.com/collections/bdfhafhdeb)).
+
+???
+
+- Become relevant in recent years, say 2019
+
+- Possible through better sample preparation, reduction of loss of
+  material, miniaturisation, automation, better MS, greater
+  sensitivity, DDA and DIA, LFQ and labelling, ...
+
+---
+class: middle
+
+
+|          | FC                   | scRNA-Seq             | SCP               |
+|:---------|:---------------------|:----------------------|-------------------|
+| features | 10                   | $10^{4}$              | $10^{3}$          |
+| cells    | $10^{6}$             | $10^{4}$              | $10^{3}$          |
+| samples  | 10 - 100             | 1 - 10                | 1 ...             |
+|          | sample <br /> throughput | feature <br /> throughput | functional <br /> PTM |
+
+???
+
+- RNA = intention vs. Protein = action
+- Inference of direct regulatory interactions with minimal assumptions
+  (Slavov:2022).
+
+
+---
+class: middle
+
+Data processing/analysis
+
+- *same* as previously
+
+With substantial exacerbation of
+
+- Batch effects (1 or 16 cells par MS acquisition) ([Vanderaa and
+  Gatto (2021)](http://dx.doi.org/10.1080/14789450.2021.1988571))
+- Missing values ([Vanderaa and Gatto
+  (2023)](https://arxiv.org/abs/2304.06654))
+
+---
+class: middle
+
+
+```{r echo=FALSE, out.width='90%',, fig.align = 'center'}
+knitr::include_graphics('figs/batch.png')
+```
+
+---
+class: middle
+
+
+```{r echo=FALSE, out.width='80%',, fig.align = 'center'}
+knitr::include_graphics('figs/na.png')
+```
+
+
+---
 class: middle, center, inverse
 
 # Proteomics practicals
@@ -601,7 +693,7 @@ class: middle
 
 ## R for Mass Spectrometry book
 
-https://rformassspectrometry.github.io/docs/
+#### https://rformassspectrometry.github.io/docs/
 
 
 ```{r echo=FALSE, out.width='75%', fig.align = 'center'}
@@ -615,3 +707,22 @@ knitr::include_graphics('./figs/toc.png')
   metabolomics.
 - If you are interested in a package in particular (Spectra, PSMatch,
   QFeatures, ...), have a look at the vignettes.
+
+---
+class: middle
+
+.left-col-75[
+
+## Questions?
+
+## Positions in the CBIO lab (Brussels) - https://lgatto.github.io/tags/#job
+
+]
+
+.right-col-25[
+
+```{r echo=FALSE, out.width='100%', fig.align = 'center'}
+knitr::include_graphics('figs/tshirt4.png')
+```
+
+]

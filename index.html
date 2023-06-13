@@ -3,7 +3,7 @@
   <head>
     <title>Mass spectrometry-based proteomics</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Laurent Gatto - lgatto.github.io" />
+    <meta name="author" content="Laurent Gatto - @lgatto@fosstodon.org" />
     <script src="index_files/header-attrs-2.21/header-attrs.js"></script>
     <script src="index_files/xaringanExtra-webcam-0.0.1/webcam.js"></script>
     <script id="xaringanExtra-webcam-options" type="application/json">{"width":"200","height":"200","margin":"1em"}</script>
@@ -27,7 +27,7 @@ class: center, middle, inverse, title-slide
 ## Statistical Data Analysis for Genome-Scale Biology
 ]
 .author[
-### Laurent Gatto - lgatto.github.io
+### Laurent Gatto - <span class="citation">@lgatto</span><span class="citation">@fosstodon.org</span>
 ]
 .date[
 ### 15 June 2023, Brixen
@@ -48,7 +48,7 @@ class: middle
 1. Participants survey
 2. The **R for Mass Spectrometry** initiative
 3. Mass spectrometry-based proteomics
-4. MS-based Single-cell proteomics
+4. MS-based single-cell proteomics
 
 ]
 
@@ -142,7 +142,7 @@ These data tables are less similar than they appear.
 ---
 class: middle
 
-### MS workflow
+### Mass spectrometry-based proteomics
 
 &lt;img src="./figs/workflow.png" width="100%" style="display: block; margin: auto;" /&gt;
 
@@ -250,8 +250,14 @@ Data dependent acquisition (DDA):
 ???
 
 Highlight
+- Some peptides might not ionise (well) -&gt; no ions -&gt; **missing data**
+- Low abundanec (too low, below limit of detection) -&gt; **missing data**
 - Semi-stochastic nature of MS -&gt; **missing data**
+- Computational "drop-outs" (see later) -&gt; **missing data**
 - Data dependent acquisition (DDA)
+
+Please keep this MS space and the semi-stochastic nature of MS
+acquisition in mind , as I will come back to it later.
 
 ---
 class: middle, center, inverse
@@ -330,6 +336,9 @@ class: middle, center, inverse
 ###  Identification: fragment ions
 
 &lt;img src="./figs/frag.png" width="95%" style="display: block; margin: auto;" /&gt;
+???
+
+- Nitrogen
 
 ---
 ###  Identification: Peptide-spectrum matching (PSM)
@@ -375,11 +384,15 @@ Performed by **search engines** such as Mascot, MSGF+, Andromeda, ...
 ---
 ### Identification: database
 
+
 ![Uniprot human proteome](./figs/uniprot1.png)
+
 
 ???
 
-## [Human proteome](https://www.uniprot.org/help/human_proteome)
+## Where do the peptides come from?
+
+### [Human proteome](https://www.uniprot.org/help/human_proteome)
 
 In 2008, a draft of the complete human proteome was released from
 UniProtKB/Swiss-Prot: the approximately 20,000 putative human
@@ -425,7 +438,7 @@ to be described in separate 'external' entries.
 ---
 class: middle
 
-### Identification
+### Identification: decoy to control false identification
 
 &lt;img src="./figs/pr-2007-00739d_0004.gif" width="65%" style="display: block; margin: auto;" /&gt;
 
@@ -438,6 +451,7 @@ Rates: Two Sides of the Same Coin](https://pubs.acs.org/doi/abs/10.1021/pr700739
 - (global) FDR = B/(A+B)
 - (local) fdr = PEP = b/(a+b)
 
+This is the same as Wolfgang's slide: Basic problem: binary decision
 
 ---
 ###  Identification: Protein inference
@@ -505,8 +519,8 @@ class: middle, center, inverse
 |MS2 |Counting   |iTRAQ, TMT |
 
 
-- Quantitation data at the PSM or peptide level.
-- Data need to be aggregated into protein level data.
+- Quantitation data at the PSM/precursor or peptide level.
+- Data need to be *aggregated* into protein level data.
 
 ???
 
@@ -533,14 +547,20 @@ class: middle
 ## QFeatures objects
 
 
+.left-col-75[
+
+
+
 ```r
 &gt; library(QFeatures)
 &gt; data(hlpsms)
 &gt; hl &lt;- readQFeatures(hlpsms, ecol = 1:10, name = "psms")
 &gt; An instance of class QFeatures containing 1 assays:
  [1] psms: SummarizedExperiment with 3010 rows and 10 columns
-&gt; hl &lt;- aggregateFeatures(hl, "psms", "Sequence", name = "peptides", fun = colMeans) |&gt;
-       aggregateFeatures("peptides", "ProteinGroupAccessions", name = "proteins", fun = colMeans)
+&gt; hl &lt;- aggregateFeatures(hl, "psms", "Sequence",
+                          name = "peptides", fun = colMeans) |&gt;
+      aggregateFeatures("peptides", "ProteinGroupAccessions",
+                        name = "proteins", fun = colMeans)
 &gt; hl
 An instance of class QFeatures containing 3 assays:
  [1] psms: SummarizedExperiment with 3010 rows and 10 columns
@@ -548,8 +568,12 @@ An instance of class QFeatures containing 3 assays:
  [3] proteins: SummarizedExperiment with 1596 rows and 10 columns
 ```
 
-&lt;img src="https://raw.githubusercontent.com/rformassspectrometry/stickers/master/QFeatures/QFeatures.png" width="15%" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
 
+.right-col-25[
+
+&lt;img src="https://raw.githubusercontent.com/rformassspectrometry/stickers/master/QFeatures/QFeatures.png" width="80%" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
 ---
 class: middle
 
@@ -573,6 +597,70 @@ class: middle, center, inverse
 ]
 
 ---
+class: middle
+
+- August 2019: in a Nature Methods Technology Feature
+  ([10.1038/s41592-019-0540-6](https://www.nature.com/articles/s41592-019-0540-6)),
+  Vivien Marx dreamt of single-cell proteomics.
+
+- March 2023: Nature Methods published a special issue with a *Focus
+  on single-cell proteomics*
+  ([www.nature.com/collections/bdfhafhdeb](www.nature.com/collections/bdfhafhdeb)).
+
+???
+
+- Become relevant in recent years, say 2019
+
+- Possible through better sample preparation, reduction of loss of
+  material, miniaturisation, automation, better MS, greater
+  sensitivity, DDA and DIA, LFQ and labelling, ...
+
+---
+class: middle
+
+
+|          | FC                   | scRNA-Seq             | SCP               |
+|:---------|:---------------------|:----------------------|-------------------|
+| features | 10                   | `\(10^{4}\)`              | `\(10^{3}\)`          |
+| cells    | `\(10^{6}\)`             | `\(10^{4}\)`              | `\(10^{3}\)`          |
+| samples  | 10 - 100             | 1 - 10                | 1 ...             |
+|          | sample &lt;br /&gt; throughput | feature &lt;br /&gt; throughput | functional &lt;br /&gt; PTM |
+
+???
+
+- RNA = intention vs. Protein = action
+- Inference of direct regulatory interactions with minimal assumptions
+  (Slavov:2022).
+
+
+---
+class: middle
+
+Data processing/analysis
+
+- *same* as previously
+
+With substantial exacerbation of
+
+- Batch effects (1 or 16 cells par MS acquisition) ([Vanderaa and
+  Gatto (2021)](http://dx.doi.org/10.1080/14789450.2021.1988571))
+- Missing values ([Vanderaa and Gatto
+  (2023)](https://arxiv.org/abs/2304.06654))
+
+---
+class: middle
+
+
+&lt;img src="figs/batch.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle
+
+
+&lt;img src="figs/na.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
 class: middle, center, inverse
 
 # Proteomics practicals
@@ -582,7 +670,7 @@ class: middle
 
 ## R for Mass Spectrometry book
 
-https://rformassspectrometry.github.io/docs/
+#### https://rformassspectrometry.github.io/docs/
 
 
 &lt;img src="./figs/toc.png" width="75%" style="display: block; margin: auto;" /&gt;
@@ -594,6 +682,23 @@ https://rformassspectrometry.github.io/docs/
   metabolomics.
 - If you are interested in a package in particular (Spectra, PSMatch,
   QFeatures, ...), have a look at the vignettes.
+
+---
+class: middle
+
+.left-col-75[
+
+## Questions?
+
+## Positions in the CBIO lab (Brussels) - https://lgatto.github.io/tags/#job
+
+]
+
+.right-col-25[
+
+&lt;img src="figs/tshirt4.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
