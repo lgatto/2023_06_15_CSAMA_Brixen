@@ -32,10 +32,10 @@ xaringanExtra::use_panelset()
 
 .left-col-75[
 
-1. Participants survey
-2. The **R for Mass Spectrometry** initiative
-3. Mass spectrometry-based proteomics
-4. MS-based single-cell proteomics
+1. The **R for Mass Spectrometry** initiative
+2. Mass spectrometry-based proteomics
+3. MS-based single-cell proteomics
+4. Practical intro
 
 ]
 
@@ -98,7 +98,7 @@ background-size: contain
 ---
 class: middle, center, inverse
 
-# How does MS work?
+# How does mass spectrometry work?
 
 ---
 class: middle
@@ -111,6 +111,10 @@ knitr::include_graphics('./figs/overview0.png')
 ```
 
 ???
+
+Coming back to a recurring theme in this course, what's the
+correlation between RNA and proteins? I would like to step back a bit,
+and invite you to think about the data underlying these correlations.
 
 From a 2011 study that compared the expression profiles of 3 cell
 lines using RNA-Seq, MS-based proteomics and immunofluorescence
@@ -666,6 +670,11 @@ With substantial exacerbation of
 - Missing values ([Vanderaa and Gatto
   (2023)](https://arxiv.org/abs/2304.06654))
 
+Software and data
+
+- `scp`: https://bioconductor.org/packages/scp
+- `scpdata`: https://bioconductor.org/packages/scpdata
+
 ---
 class: middle
 
@@ -674,6 +683,14 @@ class: middle
 knitr::include_graphics('figs/batch.png')
 ```
 
+Data from [Specht et al. (2021)](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02267-5).
+
+???
+
+- Seminal dataset published by (Specht et al. (2021))
+- 1096 macrophages, 394 monocytes (after QC)
+- 9354 peptides, 3042 proteins
+- Pre-print, data and code available since 2019
 ---
 class: middle
 
@@ -682,6 +699,18 @@ class: middle
 knitr::include_graphics('figs/na.png')
 ```
 
+Data from [Specht et al. (2021)](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02267-5).
+
+---
+class: middle
+
+
+$$ y = {\color{Blue}{MS~acquisition}} + {\color{Blue}{TMT~channel}} + {\color{Orange}{Cell~type}} + {\color{red} \epsilon} $$
+
+<img src="figs/effect_MS.png" style="height:210px;"/>
+<img src="figs/effect_TMT.png" style="height:210px;"/>
+<img src="figs/effect_Cell.png" style="height:210px;"/>
+<img src="figs/effect_res.png" style="height:210px;"/>
 
 ---
 class: middle, center, inverse
@@ -713,13 +742,20 @@ class: middle
 
 .left-col-75[
 
-## Questions?
+## EuroBioc2023, Ghent - https://eurobioc2023.bioconductor.org/
 
 ## Positions in the CBIO lab (Brussels) - https://lgatto.github.io/tags/#job
+
+## Questions?
 
 ]
 
 .right-col-25[
+
+
+```{r echo=FALSE, out.width='60%', fig.align = 'center'}
+knitr::include_graphics("figs/EuroBioC2023.png")
+```
 
 ```{r echo=FALSE, out.width='100%', fig.align = 'center'}
 knitr::include_graphics('figs/tshirt4.png')
