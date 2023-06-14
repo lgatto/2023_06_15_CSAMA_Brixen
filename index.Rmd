@@ -688,7 +688,9 @@ With substantial exacerbation of
 
 Software and data
 
-- `scp`: https://bioconductor.org/packages/scp
+- `scp`: https://bioconductor.org/packages/scp (uses
+  [QFeatures](https://bioconductor.org/packages/QFeatures) and
+  [SingleCellExperiment](https://bioconductor.org/packages/SingleCellExperiment))
 - `scpdata`: https://bioconductor.org/packages/scpdata
 
 ---
