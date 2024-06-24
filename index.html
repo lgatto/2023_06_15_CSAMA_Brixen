@@ -4,15 +4,15 @@
     <title>Mass spectrometry-based proteomics</title>
     <meta charset="utf-8" />
     <meta name="author" content="Laurent Gatto - @lgatto@fosstodon.org" />
-    <script src="index_files/header-attrs-2.21/header-attrs.js"></script>
+    <script src="index_files/header-attrs-2.27/header-attrs.js"></script>
     <script src="index_files/xaringanExtra-webcam-0.0.1/webcam.js"></script>
     <script id="xaringanExtra-webcam-options" type="application/json">{"width":"200","height":"200","margin":"1em"}</script>
     <link href="index_files/tile-view-0.2.6/tile-view.css" rel="stylesheet" />
     <script src="index_files/tile-view-0.2.6/tile-view.js"></script>
     <script src="index_files/xaringanExtra_fit-screen-0.2.6/fit-screen.js"></script>
     <link href="index_files/xaringanExtra-extra-styles-0.2.6/xaringanExtra-extra-styles.css" rel="stylesheet" />
-    <link href="index_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
-    <script src="index_files/panelset-0.2.6/panelset.js"></script>
+    <link href="index_files/panelset-0.3.0/panelset.css" rel="stylesheet" />
+    <script src="index_files/panelset-0.3.0/panelset.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
     <link rel="stylesheet" href="my.css" type="text/css" />
   </head>
@@ -294,7 +294,7 @@ class: middle
 
 ## Spectra objects
 
-&lt;img src="https://rformassspectrometry.github.io/docs/img/raw.png" width="95%" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://rformassspectrometry.github.io/book/img/raw.png" width="95%" style="display: block; margin: auto;" /&gt;
 ---
 class: middle
 
@@ -302,7 +302,7 @@ class: middle
 .left-col-75[
 
 
-```r
+``` r
 &gt; library(Spectra)
 &gt; basename(fls &lt;- dir(system.file("sciex", package = "msdata"),
                       full.names = TRUE))
@@ -359,7 +359,7 @@ Using MS2 scans
 Matching **expected** and *observed* spectra:
 
 
-```r
+``` r
 &gt; PSMatch::calculateFragments("SIGFEGDSIGR")
            mz  ion type pos z        seq
 1    88.03931   b1    b   1 1          S
@@ -507,7 +507,7 @@ From [Qeli and Ahrens
 class: middle
 
 
-```r
+``` r
 &gt; library(PSMatch)
 &gt; basename(idf &lt;- msdata::ident(full.names = TRUE))
 [1] "TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01-20141210.mzid"
@@ -571,7 +571,7 @@ class: middle
 
 
 
-```r
+``` r
 &gt; library(QFeatures)
 &gt; data(hlpsms)
 &gt; hl &lt;- readQFeatures(hlpsms, ecol = 1:10, name = "psms")

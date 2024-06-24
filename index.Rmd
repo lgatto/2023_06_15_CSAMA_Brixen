@@ -294,7 +294,7 @@ class: middle
 ## Spectra objects
 
 ```{r echo=FALSE, out.width='95%', fig.align = 'center'}
-knitr::include_graphics('https://rformassspectrometry.github.io/docs/img/raw.png')
+knitr::include_graphics('https://rformassspectrometry.github.io/book/img/raw.png')
 ```
 ---
 class: middle
